@@ -1,8 +1,9 @@
 {
 	"info": {
 		"_postman_id": "54269576-e3aa-44cd-92f3-1a858793d93f",
-		"name": "Homework_Postman_part_2",
-		},
+		"name": "Homework_first_Postman_part_2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
 	"item": [
 		{
 			"name": "HW_test_6_currency",
@@ -11,14 +12,76 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"//Random currancy to environment\r",
+							"//Random currency to environment\r",
 							"let jsonData = JSON.parse(responseBody);\r",
 							"console.log(jsonData);\r",
 							"let RandomCurrency = jsonData[Math.floor(Math.random() * jsonData.length)];\r",
 							"postman.setEnvironmentVariable(\"RandomCurrency\", RandomCurrency.Cur_ID);\r",
-							"\r",
-							"\r",
 							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "auth_token",
+							"value": "{{token}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/currency",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"currency"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HW_test_6_currency ***",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// List of currencies\r",
+							"pm.test ('Cycle', function (){\r",
+							"    let jsonData = pm.response.json();\r",
+							"    let arr = [];\r",
+							"    let id = 0;\r",
+							"    for(id=0; id < jsonData.length; id++){\r",
+							"        const postRequest = {\r",
+							"            url: pm.variables.get('url') + '/curr_byn',\r",
+							"            method: 'POST',\r",
+							"            header: {'Content-Type': 'multipart/form-data'},\r",
+							"            body: {\r",
+							"                mode: 'formdata',\r",
+							"                formdata:[\r",
+							"                    {\"key\":\"auth_token\", \"value\": pm.variables.get(\"token\")},\r",
+							"                    {\"key\": \"curr_code\", \"value\": jsonData[id].Cur_ID}\r",
+							"\r",
+							"                ]\r",
+							"            },\r",
+							"        };\r",
+							"        pm.sendRequest(postRequest, (error, res) => {\r",
+							"            if (res.code === 200) {\r",
+							"                arr.push(res.json());\r",
+							"                console.log(arr);\r",
+							"                }\r",
+							"        })\r",
+							"    };\r",
+							"    });"
 						],
 						"type": "text/javascript"
 					}
